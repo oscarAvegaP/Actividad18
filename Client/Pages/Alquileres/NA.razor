@@ -1,0 +1,43 @@
+﻿@page "/Alquilers/n"
+@using Actividad18.Shared.Models
+@inject NavigationManager navegator
+@inject HttpClient http
+
+
+<h3>Nuevo Alquiler</h3>
+
+<EditForm Model="cliente" OnValidSubmit="añadir">
+    <DataAnnotationsValidator />
+
+    <div class="mb-3">
+        <label for="dtFechaI" class="form-label">Fecha Inicio</label>
+        <InputDate id="dtFechaI" class="form-control" @bind-Value="cliente.FechaInicio" />
+    </div>
+    <div class="mb-3">
+        <label for="dtFechaF" class="form-label">>Fecha Final</label>
+        <InputDate id="dtFechaF" class="form-control" @bind-Value="cliente.FechaFinal" />
+    </div>
+    <div class="mb-3">
+        <label for="numprecio" class="form-label">Precio</label>
+        <InputNumber id="numprecio" class="form-control" @bind-Value="cliente.precio" />
+    </div>
+    <div class="mb-3">
+        <label for="numCoche" class="form-label">Id del Coche</label>
+        <InputNumber id="numCoche" class="form-control" @bind-Value="cliente.IdCoche" />
+    </div
+    <div class="mb-3">
+        <label for="numId" class="form-label">Id del Cliente</label>
+        <InputNumber id="numId" class="form-control" @bind-Value="cliente.ClientesId" />
+    </div>
+    <button type="submit" class="btn btn-primary">Añadir</button>
+</EditForm>
+
+
+@code {
+    private Alquiler cliente = new Alquiler();
+    private async void añadir()
+    {
+        await http.PostAsJsonAsync("api/Alquilers", cliente);
+        navegator.NavigateTo("/Alquileres");
+    }
+}

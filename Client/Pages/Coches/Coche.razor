@@ -1,0 +1,76 @@
+﻿@page "/Coches"
+@inject NavigationManager navegator
+@inject HttpClient http
+@using Actividad18.Shared.Models
+
+<h3>Alquiler</h3>
+
+<button class="btn btn-primary" @onclick=agregar><span class="oi oi-plus"> Agregar Alquiler</span></button>
+
+@if (lista == null)
+{
+    <h4>Cargando ...</h4>
+}
+else if (lista.Count == 0)
+{
+    <h4>No hay Alquiler</h4>
+}
+else
+{
+    <table class="table table-responsive">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Modelo</th>
+                <th>Marca</th>
+                <th>Año</th>
+                <th>Kilometraje</th>
+                <th>Estado del Vehiculo %</th>
+                <th>Id del Alquiler</th>
+                <th>Editar</th>
+                <th>Borrar</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var i in lista)
+            {
+                <tr>
+                    <td>@i.Id</td>
+                    <td>@i.Modelo</td>
+                    <td>@i.Marca</td>
+                    <td>@i.año</td>
+                    <td>@i.kilometraje</td>
+                    <td>@i.estado</td>
+                    <td>@i.AlquilerId</td>
+                    <td><button class="btn btn-primary" @onclick="(()=>Cambiar(Convert.ToInt32(i.Id)))">Edit</button></td>
+                    <td><button class="btn btn-primary" @onclick="(()=>eliminar(i))">Delete</button></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+@code {
+    private List<Coches> lista = new List<Coches>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        lista = await http.GetFromJsonAsync<List<Coches>>("api/Coches");
+    }
+
+    public void agregar()
+    {
+        navegator.NavigateTo("/Coches/n");
+    }
+
+    private void Cambiar(int id)
+    {
+        navegator.NavigateTo($"/Coches/e/{id}");
+    }
+    public async Task eliminar(Coches coche)
+    {
+        await http.DeleteAsync($"api/Coches/{coche.Id}");
+        lista.Remove(coche);
+    }
+}

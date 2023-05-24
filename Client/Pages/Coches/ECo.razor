@@ -1,0 +1,56 @@
+﻿@page "/Coches/e/{id:int}";
+@using Actividad18.Shared.Models;
+@inject HttpClient http
+@inject NavigationManager navegator
+
+<h3>Cambios de alquiler</h3>
+
+<EditForm Model="cliente" OnValidSubmit="edit">
+    <DataAnnotationsValidator />
+
+    <div class="mb-3">
+        <label for="dtFechaI" class="form-label">Modelo</label>
+        <InputText id="dtFechaI" class="form-control" @bind-Value="cliente.Modelo" />
+    </div>
+    <div class="mb-3">
+        <label for="dtFechaI" class="form-label">Marca</label>
+        <InputText id="dtFechaI" class="form-control" @bind-Value="cliente.Marca" />
+    </div>
+    <div class="mb-3">
+        <label for="dtFechaI" class="form-label">Año</label>
+        <InputText id="dtFechaI" class="form-control" @bind-Value="cliente.año" />
+    </div>
+    <div class="mb-3">
+        <label for="numprecio" class="form-label">Kilometraje</label>
+        <InputNumber id="numprecio" class="form-control" @bind-Value="cliente.kilometraje" />
+    </div>
+    <div class="mb-3">
+        <label for="numCoche" class="form-label">Estado</label>
+        <InputNumber id="numCoche" class="form-control" @bind-Value="cliente.estado" />
+    </div
+    <div class="mb-3">
+        <label for="numId" class="form-label">Id del Alquiler</label>
+        <InputNumber id="numId" class="form-control" @bind-Value="cliente.AlquilerId" />
+    </div>
+    <button type="submit" class="btn btn-primary">Añadir</button>
+</EditForm>
+
+
+
+@code {
+    [Parameter]
+    public int id { get; set; }
+    private Coches cliente = new Coches();
+
+    protected override async Task OnInitializedAsync()
+    {
+        cliente = await http.GetFromJsonAsync<Coches>($"api/Coches/{id}");
+    }
+
+    private async void edit()
+    {
+        await http.PutAsJsonAsync($"api/Coches/{id}", cliente);
+        navegator.NavigateTo("/Coches");
+    }
+}
+
